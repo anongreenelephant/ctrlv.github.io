@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="google-site-verification" content="JGSM6XGJVjlLsyntZhXLJn7mibos9i0EBPx4Y3_SnVk" />
+
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description" content="Generating motion-controllable videos through 2D and 3D bounding boxes.">
+  <meta property="og:title" content="Ctrl-V: Higher Fidelity Video Generation with Bounding-Box Controlled Object Motion"/>
+  <meta property="og:description" content="Generating motion-controllable videos through 2D and 3D bounding boxes."/>
+  <meta property="og:url" content="https://github.com/anongreenelephant/ctrlv.github.io"/>
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
+  <meta property="og:image" content="static/images/logo.png" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+
+
+  <meta name="twitter:title" content="Ctrl-V: Higher Fidelity Video Generation with Bounding-Box Controlled Object Motion">
+  <meta name="twitter:description" content="Generating motion-controllable videos through 2D and 3D bounding boxes.">
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
+  <meta name="twitter:image" content="static/images/logo.png">
+  <meta name="twitter:card" content="static/images/CtrlV_teaserv2.png">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="video generation; motion control; diffusion model; ctrl-v; bounding-box video generation; stable video diffusion; svd with code">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>Ctrl-V: Higher Fidelity Video Generation with Bounding-Box Controlled Object Motion</title>
+  <link rel="icon" type="image/png" href="static/images/logo.png">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+  rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  .header {
+    text-align: center;
+    padding: 32px;
+  }
+  
+  .row {
+    display: -ms-flexbox; /* IE 10 */
+    display: flex;
+    -ms-flex-wrap: wrap; /* IE 10 */
+    flex-wrap: wrap;
+    padding: 0 4px;
+  }
+  
+  /* Create two equal columns that sits next to each other */
+  .column {
+    -ms-flex: 50%; /* IE 10 */
+    flex: 50%;
+    padding: 0 4px;
+  }
+  
+
+  .column img {
+    margin-top: 8px;
+    vertical-align: middle;
+  }
+  
+  /* Style the buttons */
+  .btn {
+    border: none;
+    outline: none;
+    padding: 10px 16px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  
+  .btn:hover {
+    background-color: #ddd;
+  }
+  
+  .btn.active {
+    background-color: #666;
+    color: white;
+  }
+
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+
+  table.center {
+    margin-left: auto; 
+    margin-right: auto;
+  }
+  </style>
+
+</head>
+
+
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+    </nav>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Ctrl-V: Higher Fidelity Video Generation with Bounding-Box Controlled Object Motion</h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+
+                  <div class="is-size-5 publication-authors">
+                    <span class="author-block">Anonymous</span>
+                  </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Teaser video-->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/teaser.MOV"
+                type="video/mp4">
+      </video>
+      <img src="static/images/CtrlV_teaserv2.png" alt="Ctrl_V_teaser" class="center-image" style="max-width: 100%; height: auto;">
+      <h2 class="subtitle has-text-centered">
+        <mark>Overview of Ctrl-V's generation pipeline</mark> <b>Inputs (left): </b>Our inputs include an initial frame, its corresponding bounding boxes and the final frame's bounding boxes. <b>Bounding-box prediction samples (middle): </b>We illustrate three different sequences generated from our diffusion based bounding box motion prediction model. <b>Videos sampled from our Box2Video diffusion model (right): </b>Our Box2Video model conditions on the predicted bounding-box samples to produce final video clips.
+      </h2>
+    </div>
+  </div>
+</section>
+<!-- End teaser video -->
+
+<!-- Paper abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            With recent advances in video prediction, controllable video generation has been attracting more attention. Generating high fidelity videos according to simple and flexible conditioning is of particular interest. To this end, we propose a controllable video generation model using pixel level renderings of 2D or 3D bounding boxes as conditioning. In addition, we also create a bounding box predictor that, given the initial and ending frames' bounding boxes, can predict up to 15 bounding boxes per frame for all the frames in a 25-frame clip.  We perform experiments across 3 well-known AV video datasets: KITTI, Virtual-KITTI 2 and BDD100k. 
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+
+
+
+<!-- Photo Grid -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">From BBox Predictor to Box2Video</h2>
+      <p>We showcase a range of BDD generation results produced by our model in different scene scenarios, such as city, urban, highways, busy intersections and at night. Each visualization displays a 25-frame clip at 5 fps.  The <b>left</b> column displays the ground-truth clip, while the <b>right</b> column features Ctrl-V generations, created using the BBox predictor's predictions and generated by Box2video. <i>Inputs: ONE initial GT frame + THREE initial GT 2D-bounding-box frames + ONE last GT 2D-bounding-box frame.</i></p>
+      <!-- Tab content -->
+      <div id="BDD" class="tabcontent">
+        <div class="row"> 
+          <div class="column">
+            <img src="static/images/generated_bdd_01_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_12_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_03_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_04_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_15_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_05_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_16_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_14_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_06_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_11_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_13_gt.gif" style="width:100%">
+            <img src="static/images/generated_bdd_10_gt.gif" style="width:100%">
+          </div>
+          <div class="column">
+            <img src="static/images/generated_bdd_01_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_12_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_03_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_04_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_15_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_05_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_16_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_14_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_06_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_11_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_13_pred.gif" style="width:100%">
+            <img src="static/images/generated_bdd_10_pred.gif" style="width:100%">
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</section> 
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">3D-Bounding-Box Examples</h2>
+      <p>Our model can predict and condition on both 2D bounding boxes and 3D-bounding boxes. Below are our 3D-bounding-box frame predictions and video generations conditioned on the 3D-bounding-box predictions from KITTI and vKITTI2 datasets.<i>Inputs: ONE initial GT frame + THREE initial GT 3D-bounding-box frames + ONE last GT 3D-bounding-box frame.</i> <b>Left: </b>bounding-box frame predictions. <b>Right: </b>Video generated based on predicted bounding-box frames. These examples are being compressed from 375x1242 to 320x512.</p>
+      <!-- Tab content -->
+      <div id="BDD" class="tabcontent">
+        <div class="row"> 
+          <div class="column">
+            <img src="static/images/generated_vkitti_3D_bbox_pred.gif" style="width:100%">
+            <img src="static/images/generated_kitti_3D_bbox_pred.gif" style="width:100%">
+          </div>
+          <div class="column">
+            <img src="static/images/generated_vkitti_3D_pred.gif" style="width:100%">
+            <img src="static/images/generated_kitti_3D_pred.gif" style="width:100%">
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End photo grid -->
+
+<!-- Frame-by-frame results -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Frame-by-Frame Visualization of Teacher-Forced Box2Video Generations</h2>
+      <p>A frame-by-frame visualization of Box2Video generation, conditioned on the ground-truth 2D-bounding-box frame sequence from the BDD dataset. The ground-truth bounding boxes are overlayed in the plots.
+        </p>
+      <table border="1" class="center"> 
+        <tr> 
+            <td><img src= 
+      "static/images/ctrlnet_demo/frame1.png" 
+                alt="frame1" width="256" 
+                height="160" style="display: block;"> 
+            </td> 
+            <td><img src= 
+              "static/images/ctrlnet_demo/frame2.png" 
+                        alt="frame2" width="256" 
+                        height="160" style="display: block;"> </td> 
+            <td><img src= 
+              "static/images/ctrlnet_demo/frame3.png" 
+                        alt="frame3" width="256" 
+                        height="160" style="display: block;"> </td> 
+            <td><img src= 
+              "static/images/ctrlnet_demo/frame4.png" 
+                        alt="frame4" width="256" 
+                        height="160" style="display: block;"> </td>
+            <td><img src= 
+              "static/images/ctrlnet_demo/frame5.png" 
+                        alt="frame5" width="256" 
+                        height="160" style="display: block;"> </td> 
+        </tr> 
+        <tr> 
+          <td><img src= 
+    "static/images/ctrlnet_demo/frame6.png" 
+              alt="frame6" width="256" 
+              height="160" style="display: block;"> 
+          </td> 
+          <td><img src= 
+            "static/images/ctrlnet_demo/frame7.png" 
+                      alt="frame7" width="256" 
+                      height="160" style="display: block;"> </td> 
+          <td><img src= 
+            "static/images/ctrlnet_demo/frame8.png" 
+                      alt="frame8" width="256" 
+                      height="160" style="display: block;"> </td> 
+          <td><img src= 
+            "static/images/ctrlnet_demo/frame9.png" 
+                      alt="frame9" width="256" 
+                      height="160" style="display: block;"> </td>
+          <td><img src= 
+            "static/images/ctrlnet_demo/frame10.png" 
+                      alt="frame10" width="256" 
+                      height="160" style="display: block;"> </td> 
+      </tr>
+      <tr> 
+        <td><img src= 
+  "static/images/ctrlnet_demo/frame11.png" 
+            alt="frame11" width="256" 
+            height="160" style="display: block;"> 
+        </td> 
+        <td><img src= 
+          "static/images/ctrlnet_demo/frame12.png" 
+                    alt="frame12" width="256" 
+                    height="160" style="display: block;"> </td> 
+        <td><img src= 
+          "static/images/ctrlnet_demo/frame13.png" 
+                    alt="frame13" width="256" 
+                    height="160" style="display: block;"> </td> 
+        <td><img src= 
+          "static/images/ctrlnet_demo/frame14.png" 
+                    alt="frame14" width="256" 
+                    height="160" style="display: block;"> </td>
+        <td><img src= 
+          "static/images/ctrlnet_demo/frame15.png" 
+                    alt="frame15" width="256" 
+                    height="160" style="display: block;"> </td> 
+    </tr> 
+    <tr> 
+      <td><img src= 
+"static/images/ctrlnet_demo/frame16.png" 
+          alt="frame16" width="256" 
+          height="160" style="display: block;"> 
+      </td> 
+      <td><img src= 
+        "static/images/ctrlnet_demo/frame17.png" 
+                  alt="frame17" width="256" 
+                  height="160" style="display: block;"> </td> 
+      <td><img src= 
+        "static/images/ctrlnet_demo/frame18.png" 
+                  alt="frame18" width="256" 
+                  height="160" style="display: block;"> </td> 
+      <td><img src= 
+        "static/images/ctrlnet_demo/frame19.png" 
+                  alt="frame19" width="256" 
+                  height="160" style="display: block;"> </td>
+      <td><img src= 
+        "static/images/ctrlnet_demo/frame20.png" 
+                  alt="frame20" width="256" 
+                  height="160" style="display: block;"> </td> 
+  </tr>
+  <tr> 
+    <td><img src= 
+"static/images/ctrlnet_demo/frame21.png" 
+        alt="frame21" width="256" 
+        height="160" style="display: block;"> 
+    </td> 
+    <td><img src= 
+      "static/images/ctrlnet_demo/frame22.png" 
+                alt="frame22" width="256" 
+                height="160" style="display: block;"> </td> 
+    <td><img src= 
+      "static/images/ctrlnet_demo/frame23.png" 
+                alt="frame23" width="256" 
+                height="160" style="display: block;"> </td> 
+    <td><img src= 
+      "static/images/ctrlnet_demo/frame24.png" 
+                alt="frame24" width="256" 
+                height="160" style="display: block;"> </td>
+    <td><img src= 
+      "static/images/ctrlnet_demo/frame25.png" 
+                alt="frame25" width="256" 
+                height="160" style="display: block;"> </td> 
+</tr> 
+      </table> 
+
+    </div>
+  </div>
+</div>
+<!-- End frame-by-frame reults -->
+
+<!-- Model variatiants -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Comparison of Model Variants</h2>
+      <p>BDD100K's generation visualization when our BBox predictor receives a trajectory-frame as the final conditional frame instead of a 2D-bounding-box frame.</p>
+      <!-- Tab content -->
+      <div id="BDD" class="tabcontent">
+        <div class="row"> 
+          <div class="column">
+            <img src="static/images/generated_bdd_traj_01_gt.gif" style="width:100%">
+          </div>
+          <div class="column">
+            <img src="static/images/generated_bdd_traj_01_pred.gif" style="width:100%">
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+
+          <p>
+            This page's template was borrowed from <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Statcounter tracking code -->
+  
+<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+
+    <!-- End of Statcounter Code -->
+
+  </body>
+  </html>
