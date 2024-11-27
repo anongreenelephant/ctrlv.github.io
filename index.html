@@ -430,7 +430,7 @@
   <div class="hero-body">
     <div class="container">
       <h2 class="title is-3">Comparison of Model Variants</h2>
-      <p>BDD100K's generation visualization when our BBox predictor receives a trajectory-frame as the final conditional frame instead of a 2D-bounding-box frame.</p>
+      <p>Generation visualization on BDD100K when our BBox predictor receives a trajectory-frame as the final conditional frame instead of a 2D-bounding-box frame.</p>
       <!-- Tab content -->
       <div id="BDD" class="tabcontent">
         <div class="row"> 
@@ -439,6 +439,20 @@
           </div>
           <div class="column">
             <img src="static/images/generated_bdd_traj_01_pred.gif" style="width:100%">
+          </div>  
+        </div>
+      </div>
+      <p>Generation comparison on BDD100K: Fine-tuned Stable Video Diffusion (SVD) (left) vs. Ctrl-V (right).</p>
+      <!-- Tab content -->
+      <div id="BDD" class="tabcontent">
+        <div class="row"> 
+          <div class="column">
+            <img src="static/images/svd_87.gif" style="width:100%">
+            <img src="static/images/svd_171.gif" style="width:100%">
+          </div>
+          <div class="column">
+            <img src="static/images/ctrlv_87.gif" style="width:100%">
+            <img src="static/images/ctrlv_171.gif" style="width:100%">
           </div>  
         </div>
       </div>
